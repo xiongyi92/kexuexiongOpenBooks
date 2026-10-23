@@ -39,18 +39,17 @@
 2. 每本书页面底部都有"关联阅读"，可以顺藤摸瓜。
 3. 使用左侧边栏（[_Sidebar](_Sidebar)）快速跳转。
 
-## 📦 如何部署到 GitHub Wiki
+## 📦 如何维护本 Wiki
+
+本 Wiki 部署在 Gitee，仓库地址：`https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks.git`。
 
 ```bash
-# 1. 克隆本仓库的 wiki（每个 GitHub 仓库自带 wiki git 仓库）
-git clone https://github.com/<你的用户名>/<你的仓库>.wiki.git
+# 1. 克隆 wiki 仓库
+git clone https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks.git
 
-# 2. 把本目录下所有 .md 文件复制进去
-cp wiki/*.md <你的仓库>.wiki.git/
-
-# 3. 提交推送
-cd <你的仓库>.wiki.git
-git add . && git commit -m "docs: 初始化图书 Wiki" && git push
+# 2. 修改或新增 .md 文件后提交推送
+cd kexuexiongOpenBooks
+git add . && git commit -m "docs: 更新图书 Wiki" && git push
 ```
 
-推送后访问 `https://github.com/<用户名>/<仓库>/wiki` 即可看到带侧边栏导航的完整 Wiki。
+推送后访问 https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks/wikis 即可看到带侧边栏导航的完整 Wiki。
