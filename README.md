@@ -24,6 +24,7 @@
 1. **先看 [阅读路线图](wiki/阅读路线图.md)**：按你的角色（运维 / 金融架构师 / 财务信息化 / AI 工程师 / 嵌入式工程师）选择一条阅读路线。
 2. **每本书有独立 Wiki 页面**：内容简介、全书结构、阅读建议、关联书目，见 [Wiki 首页](wiki/Home.md)。
 3. **Gitee Wiki 版**：https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks/wikis （与 `wiki/` 目录内容一致）
+4. **动手练**：[《WorkBuddy 在财务中的应用》配套练习账套](WorkBuddy在财务中的应用-练习账套/README.md) —— 一套 51 张凭证、10 张表的完整月度账，含原始单据册与参考答案册。
 
 ## 📁 目录结构
 
@@ -31,6 +32,11 @@
 kexuexiongOpenBooks/
 ├── README.md                          # 本文件
 ├── *.pdf                              # 10 本书的完整 PDF
+├── WorkBuddy在财务中的应用-练习账套/    # 《WorkBuddy 在财务中的应用》配套练习账套
+│   ├── README.md                      # 练习说明与数据口径
+│   ├── 晨光贸易2026年7月_账务练习数据.xlsx
+│   ├── 晨光贸易2026年7月_参考答案.xlsx
+│   └── 生成脚本/                       # 可重跑的账套生成器（model.py / build.py）
 └── wiki/                              # Wiki 源文件（Markdown）
     ├── Home.md                        # Wiki 首页
     ├── _Sidebar.md                    # 侧边栏导航

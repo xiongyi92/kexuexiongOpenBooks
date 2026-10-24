@@ -1,0 +1,14 @@
+# 本地工具数据，不入库
+.workbuddy-ai/
+
+# 系统与运行时垃圾文件
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office 临时文件
+~$*.xlsx
+~$*.docx
+~$*.pptx
