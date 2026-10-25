@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBS Studio 新手入门完全教程</title>
+<style>
+  :root{
+    --purple:#7c3aed;
+    --purple-dark:#5b21b6;
+    --purple-light:#ede9fe;
+    --purple-bg:#f5f3ff;
+    --ink:#1f2937;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --bg:#fafafa;
+    --card:#ffffff;
+    --red:#dc2626;
+    --green:#16a34a;
+    --amber:#d97706;
+    --blue:#2563eb;
+    --cyan:#0891b2;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.75;
+    font-size:16px;
+  }
+  /* 顶部导航 */
+  header.topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:0 24px;
+    display:flex;align-items:center;gap:14px;
+    height:60px;
+  }
+  header.topbar .logo{
+    display:flex;align-items:center;gap:10px;font-weight:700;color:var(--purple-dark);
+    white-space:nowrap;
+  }
+  header.topbar .logo .dot{
+    width:26px;height:26px;border-radius:8px;
+    background:linear-gradient(135deg,#a78bfa,#7c3aed);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;
+  }
+  nav.toc{
+    display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;
+  }
+  nav.toc::-webkit-scrollbar{display:none;}
+  nav.toc a{
+    color:var(--muted);text-decoration:none;font-size:14px;padding:6px 12px;border-radius:8px;
+    white-space:nowrap;transition:.15s;
+  }
+  nav.toc a:hover{color:var(--purple);background:var(--purple-bg);}
+  /* 封面 */
+  .cover{
+    background:
+      radial-gradient(1200px 500px at 80% -10%,#ddd6fe 0%,transparent 60%),
+      radial-gradient(900px 400px at 10% 110%,#ede9fe 0%,transparent 55%),
+      linear-gradient(180deg,#ffffff,#f7f5ff);
+    padding:72px 24px 64px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .cover .badge{
+    display:inline-block;background:var(--purple-light);color:var(--purple-dark);
+    font-size:13px;font-weight:600;padding:5px 14px;border-radius:999px;margin-bottom:18px;
+  }
+  .cover h1{
+    font-size:44px;margin:0 0 12px;letter-spacing:-1px;
+    background:linear-gradient(120deg,#7c3aed,#4f46e5,#0891b2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .cover p.sub{font-size:18px;color:var(--muted);max-width:720px;margin:0 auto 26px;}
+  .cover .meta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .cover .meta span{
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:6px 14px;font-size:13px;color:var(--muted);box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* 主体 */
+  main{max-width:980px;margin:0 auto;padding:40px 24px 80px;}
+  section{margin-bottom:56px;scroll-margin-top:76px;}
+  h2{
+    font-size:28px;margin:0 0 8px;color:#111827;letter-spacing:-.5px;
+    display:flex;align-items:center;gap:12px;
+  }
+  h2 .num{
+    flex:none;width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;
+  }
+  h2 + .lead{color:var(--muted);margin:0 0 24px;font-size:16px;}
+  h3{font-size:20px;margin:28px 0 12px;color:#111827;}
+  h3 .tag{font-size:12px;color:var(--purple);background:var(--purple-light);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:middle;font-weight:600;}
+  p{margin:12px 0;}
+  a{color:var(--purple-dark);}
+  strong{color:#111827;}
+  code{
+    background:#f3f4f6;border:1px solid var(--line);border-radius:5px;
+    padding:1px 6px;font-size:.9em;font-family:"SF Mono",Consolas,"Cascadia Code",monospace;color:#c026d3;
+  }
+  /* 卡片 */
+  .grid{display:grid;gap:16px;}
+  .grid.c2{grid-template-columns:repeat(2,1fr);}
+  .grid.c3{grid-template-columns:repeat(3,1fr);}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .card h4{margin:0 0 8px;font-size:16px;}
+  .card p{margin:6px 0;color:#374151;font-size:14.5px;}
+  .card .ico{font-size:22px;}
+  .card.tip{border-left:4px solid var(--green);background:#f6fdf8;}
+  .card.warn{border-left:4px solid var(--amber);background:#fffaf2;}
+  .card.note{border-left:4px solid var(--blue);background:#f5f9ff;}
+  .card.key{border-left:4px solid var(--purple);background:var(--purple-bg);}
+  /* 提示条 */
+  .callout{
+    border-radius:12px;padding:14px 18px;margin:18px 0;font-size:15px;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .callout .sym{font-size:18px;line-height:1.4;flex:none;}
+  .callout.tip{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;}
+  .callout.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+  .callout.info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;}
+  .callout.purple{background:var(--purple-bg);border:1px solid #ddd6fe;color:#5b21b6;}
+  /* 步骤 */
+  ol.steps{counter-reset:step;list-style:none;padding:0;margin:18px 0;}
+  ol.steps>li{
+    counter-increment:step;position:relative;padding:0 0 20px 52px;margin:0;
+  }
+  ol.steps>li::before{
+    content:counter(step);
+    position:absolute;left:0;top:2px;width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
+  }
+  ol.steps>li:not(:last-child)::after{
+    content:"";position:absolute;left:15px;top:36px;bottom:0;width:2px;background:var(--line);
+  }
+  ol.steps b{display:block;font-size:16px;margin-bottom:2px;}
+  ol.steps .d{color:#4b5563;font-size:14.5px;}
+  /* 表格 */
+  .tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:12px;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;background:#fff;}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#f8f7ff;color:#4c1d95;font-weight:600;white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#faf9ff;}
+  td .ok{color:var(--green);font-weight:600;}
+  td .no{color:var(--red);font-weight:600;}
+  /* 图容器 */
+  .figure{
+    margin:22px 0;background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .figure svg{max-width:100%;height:auto;}
+  .figure figcaption{
+    margin-top:10px;font-size:13.5px;color:var(--muted);
+  }
+  .figure figcaption b{color:#4c1d95;}
+  /* 场景卡片 */
+  .scene{
+    background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    margin:20px 0;box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .scene .head{
+    display:flex;align-items:center;gap:14px;padding:18px 22px;
+    background:linear-gradient(120deg,#f5f3ff,#fafaff);border-bottom:1px solid var(--line);
+  }
+  .scene .head .n{
+    flex:none;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;
+  }
+  .scene .head h3{margin:0;font-size:19px;}
+  .scene .head .use{font-size:13px;color:var(--muted);}
+  .scene .body{padding:18px 22px 22px;}
+  .scene .row{display:flex;gap:10px;align-items:flex-start;margin:10px 0;}
+  .scene .row .lbl{
+    flex:none;width:86px;font-size:13px;font-weight:600;color:#6d28d9;padding-top:2px;
+  }
+  .scene .row .val{flex:1;font-size:14.5px;color:#374151;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    background:var(--purple-bg);color:#5b21b6;border:1px solid #ddd6fe;
+    border-radius:8px;padding:4px 10px;font-size:13px;font-weight:500;
+  }
+  .chip.gray{background:#f3f4f6;color:#4b5563;border-color:var(--line);}
+  /* 快捷键 */
+  kbd{
+    display:inline-block;background:#fff;border:1px solid #c7cbd1;border-bottom-width:2px;
+    border-radius:6px;padding:1px 7px;font-size:13px;font-family:inherit;color:#111827;margin:0 2px;
+  }
+  /* 页脚 */
+  footer{
+    border-top:1px solid var(--line);background:#fff;padding:32px 24px;text-align:center;color:var(--muted);font-size:13.5px;
+  }
+  .toc-panel{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:0 0 40px;
+  }
+  .toc-panel h4{margin:0 0 12px;color:#4c1d95;}
+  .toc-panel ol{margin:0;padding-left:20px;columns:2;column-gap:32px;font-size:14.5px;}
+  .toc-panel a{text-decoration:none;color:#374151;}
+  .toc-panel a:hover{color:var(--purple);}
+  @media (max-width:760px){
+    .grid.c2,.grid.c3{grid-template-columns:1fr;}
+    .cover h1{font-size:32px;}
+    .toc-panel ol{columns:1;}
+    nav.toc{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo"><span class="dot">OBS</span> 新手入门完全教程</div>
+  <nav class="toc">
+    <a href="#s1">是什么</a>
+    <a href="#s2">安装</a>
+    <a href="#s3">界面</a>
+    <a href="#s4">概念</a>
+    <a href="#s5">快速上手</a>
+    <a href="#s6">设置</a>
+    <a href="#s7">录制</a>
+    <a href="#s8">推流</a>
+    <a href="#s9">八大场景</a>
+    <a href="#s10">进阶技巧</a>
+    <a href="#s11">排障</a>
+    <a href="#s12">附录</a>
+  </nav>
+</header>
+
+<div class="cover">
+  <div class="badge">开源 · 免费 · 无水印 · 全平台</div>
+  <h1>OBS Studio 新手入门完全教程</h1>
+  <p class="sub">从零开始，带你学会用 OBS 录屏、直播、网课、虚拟摄像头……图文并茂，覆盖 8 大常见使用场景。</p>
+  <div class="meta">
+    <span>📖 适用版本：OBS Studio 32.x（当前稳定版）</span>
+    <span>💻 平台：Windows / macOS / Linux</span>
+    <span>⏱ 阅读时长：约 20 分钟</span>
+  </div>
+</div>
+
+<main>
+
+  <div class="toc-panel">
+    <h4>📑 本教程目录</h4>
+    <ol>
+      <li><a href="#s1">OBS 是什么、能做什么</a></li>
+      <li><a href="#s2">下载与安装</a></li>
+      <li><a href="#s3">认识主界面</a></li>
+      <li><a href="#s4">核心概念：场景与来源</a></li>
+      <li><a href="#s5">3 分钟快速上手（自动配置向导）</a></li>
+      <li><a href="#s6">基础设置详解</a></li>
+      <li><a href="#s7">录制视频教程</a></li>
+      <li><a href="#s8">直播推流教程</a></li>
+      <li><a href="#s9">八大使用场景实战</a></li>
+      <li><a href="#s10">进阶技巧与常用插件</a></li>
+      <li><a href="#s11">常见问题排查</a></li>
+      <li><a href="#s12">附录：快捷键与参数速查</a></li>
+    </ol>
+  </div>
+
+  <!-- ============ 1 ============ -->
+  <section id="s1">
+    <h2><span class="num">1</span>OBS 是什么、能做什么</h2>
+    <p class="lead">先花一分钟搞清楚：OBS 到底是干嘛的？</p>
+
+    <p><strong>OBS Studio</strong>（Open Broadcaster Software，开源广播软件）是一款<strong>免费、开源、无水印</strong>的视频录制与直播推流软件，支持 Windows、macOS、Linux 三大平台。它是全球主播、UP 主、网课老师最常用的工具之一，官方下载地址为 <a href="https://obsproject.com/download" target="_blank">obsproject.com/download</a>。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OBS能做什么">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6d28d9"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="30" width="130" height="240" rx="14" fill="#fff" stroke="#e5e7eb"/>
+        <text x="85" y="68" font-size="40" text-anchor="middle">🎙️</text>
+        <text x="85" y="100" font-size="14" font-weight="700" text-anchor="middle" fill="#4c1d95">画面采集</text>
+        <text x="85" y="122" font-size="12" fill="#6b7280" text-anchor="middle">屏幕 / 游戏 / 摄像头</text>
+        <text x="85" y="144" font-size="12" fill="#6b7280" text-anchor="middle">图片 / 文字 / 浏览器</text>
+        <text x="85" y="176" font-size="12" fill="#6b7280" text-anchor="middle">音频 / 媒体文件</text>
+        <line x1="40" y1="188" x2="130" y2="188" stroke="#e5e7eb"/>
+        <text x="85" y="212" font-size="14" font-weight="700" text-anchor="middle" fill="#4c1d95">实时合成</text>
+        <text x="85" y="236" font-size="12" fill="#6b7280" text-anchor="middle">画中画 / 抠像 / 滤镜</text>
+        <text x="85" y="256" font-size="12" fill="#6b7280" text-anchor="middle">转场 / 多场景</text>
+
+        <rect x="210" y="80" width="440" height="140" rx="18" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+        <text x="430" y="118" font-size="22" font-weight="800" text-anchor="middle" fill="#5b21b6">OBS Studio</text>
+        <text x="430" y="146" font-size="14" text-anchor="middle" fill="#7c3aed">采集 → 合成 → 编码 → 输出</text>
+        <text x="430" y="172" font-size="12" text-anchor="middle" fill="#6b7280">免费 · 开源 · 无水印 · 跨平台</text>
+        <text x="430" y="196" font-size="12" text-anchor="middle" fill="#6b7280">官网：obsproject.com</text>
+
+        <rect x="710" y="20" width="130" height="80" rx="12" fill="#fff" stroke="#e5e7eb"/>
+        <text x="775" y="52" font-size="26" text-anchor="middle">🎬</text>
+        <text x="775" y="82" font-size="13" font-weight="700" text-anchor="middle" fill="#111827">录制视频</text>
+        <rect x="710" y="110" width="130" height="80" rx="12" fill="#fff" stroke="#e5e7eb"/>
+        <text x="775" y="142" font-size="26" text-anchor="middle">📡</text>
+        <text x="775" y="172" font-size="13" font-weight="700" text-anchor="middle" fill="#111827">直播推流</text>
+        <rect x="710" y="200" width="130" height="80" rx="12" fill="#fff" stroke="#e5e7eb"/>
+        <text x="775" y="232" font-size="26" text-anchor="middle">📷</text>
+        <text x="775" y="262" font-size="13" font-weight="700" text-anchor="middle" fill="#111827">虚拟摄像头</text>
+
+        <line x1="160" y1="150" x2="208" y2="150" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="652" y1="120" x2="708" y2="60" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="652" y1="150" x2="708" y2="150" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="652" y1="180" x2="708" y2="240" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+      </svg>
+      <figcaption><b>图 1-1</b>　OBS 像一个"视频总控台"：把各种画面和声音采集进来，实时合成，再输出成录像或直播流。</figcaption>
+    </div>
+
+    <h3>它和 Windows 自带录屏、剪映等有何区别？</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>能力</th><th>OBS Studio</th><th>Windows 自带（Xbox Game Bar / 截图工具）</th><th>剪映 / CapCut 桌面版</th></tr></thead>
+        <tbody>
+          <tr><td>完全免费、无水印</td><td class="ok">✔ 是</td><td class="ok">✔ 是</td><td>基础版免费</td></tr>
+          <tr><td>实时直播推流（B站/抖音/视频号/YouTube）</td><td class="ok">✔ 一键推流</td><td class="no">✘ 不支持</td><td class="no">✘ 主要为剪辑</td></tr>
+          <tr><td>多画面合成（屏幕+摄像头画中画）</td><td class="ok">✔ 任意叠加</td><td>部分支持</td><td>剪辑时叠加</td></tr>
+          <tr><td>绿幕抠像 / 虚拟背景</td><td class="ok">✔ 内置</td><td class="no">✘ 无</td><td>基础抠像</td></tr>
+          <tr><td>虚拟摄像头（把 OBS 当摄像头用）</td><td class="ok">✔ 内置</td><td class="no">✘ 无</td><td class="no">✘ 无</td></tr>
+          <tr><td>多音轨、专业滤镜、转场、插件生态</td><td class="ok">✔ 极丰富</td><td class="no">✘ 无</td><td>偏剪辑</td></tr>
+          <tr><td>定位</td><td><strong>实时采集与输出</strong></td><td>轻量录屏</td><td><strong>后期剪辑</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout purple"><span class="sym">💡</span><div><strong>一句话总结：</strong>日常简单录个屏，Windows 自带工具就够；但要<strong>做直播、画中画、绿幕、多机位、专业录课</strong>，就用 OBS——它是免费的"准专业级"选择，且和剪映等剪辑软件是<strong>配合关系</strong>（OBS 录制 → 剪映剪辑）。</div></div>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section id="s2">
+    <h2><span class="num">2</span>下载与安装</h2>
+    <p class="lead">认准官方渠道，避开带捆绑的"汉化版""绿色版"陷阱。</p>
+
+    <div class="callout warn"><span class="sym">⚠️</span><div><strong>安全提醒：</strong>请务必从官网下载。<code>obsproject.com</code> 才是唯一官网；网上搜到的"OBS 中文官网/绿色版/破解版"多为第三方，可能捆绑广告或病毒。</div></div>
+
+    <ol class="steps">
+      <li><b>打开官网下载页</b><span class="d">访问 <a href="https://obsproject.com/download" target="_blank">https://obsproject.com/download</a>，页面会自动识别你的操作系统，点击对应按钮下载（Windows 选 Installer 安装版；macOS 选 Apple Silicon 或 Intel 对应的 .dmg；Linux 用发行版包管理器或 Flatpak）。</span></li>
+      <li><b>Windows 安装</b><span class="d">双击 <code>OBS-Studio-xx.x-Windows-Installer.exe</code>，一路"下一步"即可。首次启动时建议勾选"运行自动配置向导"。</span></li>
+      <li><b>macOS 安装</b><span class="d">打开 <code>.dmg</code> 文件，把 OBS 图标拖进"应用程序"文件夹。首次打开如提示"来自身份不明的开发者"，请在「系统设置 → 隐私与安全性」中点击"仍要打开"。</span></li>
+      <li><b>Linux 安装</b><span class="d">Ubuntu 可用：<code>sudo apt install obs-studio</code>；或通用方式 <code>flatpak install flathub com.obsproject.Studio</code>。</span></li>
+      <li><b>首次启动</b><span class="d">首次打开会弹出「自动配置向导」，见第 5 章。之后如需更新，在「设置 → 通用」里可切换更新通道。</span></li>
+    </ol>
+
+    <div class="grid c3">
+      <div class="card"><div class="ico">🪟</div><h4>Windows</h4><p>支持 Windows 10 及以上；强烈建议安装显卡驱动后再用硬件编码。</p></div>
+      <div class="card"><div class="ico">🍎</div><h4>macOS</h4><p>支持 Apple Silicon 与 Intel；首次需在系统设置里授予"屏幕录制"与"麦克风"权限。</p></div>
+      <div class="card"><div class="ico">🐧</div><h4>Linux</h4><p>支持 X11 与 Wayland；部分发行版需自行添加 PPA 或使用 Flatpak。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section id="s3">
+    <h2><span class="num">3</span>认识主界面</h2>
+    <p class="lead">OBS 界面看起来复杂，其实就 6 块区域，各司其职。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 860 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OBS主界面布局">
+        <rect x="0" y="0" width="860" height="470" rx="16" fill="#1e1b2e"/>
+        <!-- 菜单栏 -->
+        <rect x="12" y="12" width="836" height="30" rx="6" fill="#2d2a3f"/>
+        <text x="26" y="32" font-size="12" fill="#9ca3af">文件  编辑  视图  配置  工具  帮助</text>
+        <!-- 预览窗口 -->
+        <rect x="12" y="50" width="586" height="260" rx="10" fill="#0f0d1a" stroke="#3b3760"/>
+        <text x="305" y="170" font-size="15" fill="#6b7280" text-anchor="middle">节目预览（最终观众看到的画面）</text>
+        <rect x="28" y="196" width="150" height="96" rx="6" fill="#3b3760"/>
+        <text x="103" y="240" font-size="11" fill="#c4b5fd" text-anchor="middle">预览画面</text>
+        <!-- 状态栏 -->
+        <rect x="12" y="318" width="586" height="26" rx="6" fill="#2d2a3f"/>
+        <text x="26" y="336" font-size="11" fill="#9ca3af">LIVE  00:12:34   ● REC  00:05:11    CPU: 8%   FPS: 60   丢帧: 0%</text>
+        <!-- 右侧直播状态 -->
+        <rect x="610" y="50" width="238" height="120" rx="10" fill="#2d2a3f"/>
+        <text x="626" y="74" font-size="12" fill="#c4b5fd" font-weight="600">直播状态</text>
+        <text x="626" y="98" font-size="11" fill="#9ca3af">状态：未开播</text>
+        <text x="626" y="118" font-size="11" fill="#9ca3af">帧率/CPU/丢帧 实时监控</text>
+        <text x="626" y="140" font-size="11" fill="#9ca3af">（直播时重点看这里）</text>
+        <rect x="610" y="180" width="238" height="120" rx="10" fill="#2d2a3f"/>
+        <text x="626" y="204" font-size="12" fill="#c4b5fd" font-weight="600">直播信息</text>
+        <text x="626" y="228" font-size="11" fill="#9ca3af">服务器 / 推流地址</text>
+        <text x="626" y="248" font-size="11" fill="#9ca3af">账号与密钥信息</text>
+        <text x="626" y="268" font-size="11" fill="#9ca3af">直播时长统计</text>
+        <!-- 底部面板 -->
+        <rect x="12" y="352" width="140" height="106" rx="10" fill="#2d2a3f"/>
+        <text x="26" y="376" font-size="12" fill="#c4b5fd" font-weight="600">场景</text>
+        <rect x="26" y="388" width="112" height="24" rx="5" fill="#4c1d95"/>
+        <text x="82" y="404" font-size="11" fill="#fff" text-anchor="middle">+ 场景1</text>
+        <rect x="26" y="418" width="112" height="24" rx="5" fill="#3b3760"/>
+        <text x="82" y="434" font-size="11" fill="#d1d5db" text-anchor="middle">+ 场景2</text>
+
+        <rect x="162" y="352" width="150" height="106" rx="10" fill="#2d2a3f"/>
+        <text x="176" y="376" font-size="12" fill="#c4b5fd" font-weight="600">来源</text>
+        <rect x="176" y="388" width="122" height="24" rx="5" fill="#3b3760"/>
+        <text x="237" y="404" font-size="10" fill="#d1d5db" text-anchor="middle">显示器采集</text>
+        <rect x="176" y="418" width="122" height="24" rx="5" fill="#3b3760"/>
+        <text x="237" y="434" font-size="10" fill="#d1d5db" text-anchor="middle">视频采集设备</text>
+
+        <rect x="322" y="352" width="180" height="106" rx="10" fill="#2d2a3f"/>
+        <text x="336" y="376" font-size="12" fill="#c4b5fd" font-weight="600">混音器</text>
+        <rect x="336" y="386" width="152" height="20" rx="5" fill="#3b3760"/>
+        <text x="344" y="400" font-size="10" fill="#d1d5db">桌面音频 ▓▓▓▓▓░</text>
+        <rect x="336" y="412" width="152" height="20" rx="5" fill="#3b3760"/>
+        <text x="344" y="426" font-size="10" fill="#d1d5db">麦克风  ▓▓▓░░░░</text>
+
+        <rect x="512" y="352" width="128" height="106" rx="10" fill="#2d2a3f"/>
+        <text x="526" y="376" font-size="12" fill="#c4b5fd" font-weight="600">转场特效</text>
+        <rect x="526" y="388" width="100" height="24" rx="5" fill="#3b3760"/>
+        <text x="576" y="404" font-size="10" fill="#d1d5db" text-anchor="middle">淡入淡出 300ms</text>
+
+        <rect x="650" y="352" width="198" height="106" rx="10" fill="#2d2a3f"/>
+        <text x="664" y="376" font-size="12" fill="#c4b5fd" font-weight="600">控件</text>
+        <rect x="664" y="386" width="170" height="22" rx="5" fill="#6d28d9"/>
+        <text x="749" y="401" font-size="11" fill="#fff" text-anchor="middle">开始直播</text>
+        <rect x="664" y="414" width="170" height="22" rx="5" fill="#374151"/>
+        <text x="749" y="429" font-size="11" fill="#fff" text-anchor="middle">开始录制</text>
+        <text x="664" y="452" font-size="10" fill="#9ca3af">设置 | 虚拟摄像头 | 工作室模式</text>
+      </svg>
+      <figcaption><b>图 3-1</b>　OBS 主界面六大区域示意（截图风格为深色主题，实际可切换浅色主题）。</figcaption>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>区域</th><th>作用</th><th>新手要点</th></tr></thead>
+        <tbody>
+          <tr><td><strong>① 菜单栏</strong></td><td>文件、设置、工具等入口</td><td>「工具」里有自动配置向导、插件市场（32.0 起）</td></tr>
+          <tr><td><strong>② 预览 / 节目窗口</strong></td><td>实时预览最终画面</td><td>红框内的就是观众/录像看到的画面，可拖动调整各元素位置大小</td></tr>
+          <tr><td><strong>③ 场景</strong></td><td>保存多套"画面组合"</td><td>每个场景是一块独立画布，直播时点一下就切换</td></tr>
+          <tr><td><strong>④ 来源</strong></td><td>往当前场景里添加画面/声音素材</td><td>点 <code>+</code> 添加屏幕、摄像头、文字等，越靠上的层越靠前</td></tr>
+          <tr><td><strong>⑤ 混音器</strong></td><td>控制各声音的音量与开关</td><td>桌面音频=电脑声音，麦克风=你的说话声，可分别调节</td></tr>
+          <tr><td><strong>⑥ 转场特效</strong></td><td>场景切换时的过渡动画</td><td>默认"淡入淡出"，可改成"剪切"等</td></tr>
+          <tr><td><strong>⑦ 控件</strong></td><td>开始直播/录制、设置等</td><td>「开始直播」「开始录制」两个大按钮是核心</td></tr>
+          <tr><td><strong>⑧ 直播状态栏</strong></td><td>CPU、帧率、丢帧、时长监控</td><td>直播中若"丢帧"飙高，说明网络或性能不足（见第 11 章）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section id="s4">
+    <h2><span class="num">4</span>核心概念：场景与来源</h2>
+    <p class="lead">这是 OBS 最重要的两个概念，理解它，后面所有操作都一通百通。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="场景与来源的关系">
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6d28d9"/>
+          </linearGradient>
+        </defs>
+        <!-- 画布 -->
+        <rect x="40" y="40" width="340" height="240" rx="14" fill="#0f0d1a" stroke="#7c3aed" stroke-width="2"/>
+        <text x="210" y="66" font-size="13" fill="#c4b5fd" text-anchor="middle" font-weight="600">场景 = 一块"画布"</text>
+        <!-- 层：背景 -->
+        <rect x="60" y="90" width="300" height="160" rx="8" fill="#2d6a4f"/>
+        <text x="210" y="172" font-size="12" fill="#d1fae5" text-anchor="middle">① 背景图（最底层）</text>
+        <!-- 层：屏幕 -->
+        <rect x="88" y="108" width="244" height="122" rx="6" fill="#374151"/>
+        <text x="210" y="172" font-size="11" fill="#e5e7eb" text-anchor="middle">② 游戏/屏幕画面</text>
+        <!-- 层：摄像头 -->
+        <rect x="280" y="140" width="66" height="50" rx="6" fill="#4c1d95"/>
+        <text x="313" y="168" font-size="9" fill="#fff" text-anchor="middle">③ 摄像头</text>
+        <!-- 层：文字 -->
+        <rect x="60" y="196" width="120" height="30" rx="6" fill="#b45309"/>
+        <text x="120" y="216" font-size="12" fill="#fff" text-anchor="middle">④ 标题文字（顶层）</text>
+
+        <line x1="380" y1="160" x2="470" y2="160" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr2)"/>
+        <text x="425" y="148" font-size="11" fill="#6b7280" text-anchor="middle">来源叠加</text>
+
+        <!-- 来源列表 -->
+        <rect x="480" y="60" width="340" height="200" rx="14" fill="#fff" stroke="#e5e7eb"/>
+        <text x="650" y="90" font-size="14" fill="#4c1d95" text-anchor="middle" font-weight="700">来源（Sources）列表</text>
+        <rect x="500" y="108" width="300" height="26" rx="6" fill="#fef3c7"/>
+        <text x="512" y="126" font-size="12" fill="#92400e">④ 标题文字 —— 最上层</text>
+        <rect x="500" y="138" width="300" height="26" rx="6" fill="#ede9fe"/>
+        <text x="512" y="156" font-size="12" fill="#5b21b6">③ 视频采集设备（摄像头）</text>
+        <rect x="500" y="168" width="300" height="26" rx="6" fill="#e5e7eb"/>
+        <text x="512" y="186" font-size="12" fill="#374151">② 游戏/显示器采集</text>
+        <rect x="500" y="198" width="300" height="26" rx="6" fill="#d1fae5"/>
+        <text x="512" y="216" font-size="12" fill="#166534">① 背景图 —— 最底层</text>
+        <text x="500" y="248" font-size="11" fill="#6b7280">▲ 列表越靠上，画面越靠前（可拖动排序）</text>
+        <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+      </svg>
+      <figcaption><b>图 4-1</b>　场景是一块画布，来源是铺在画布上的素材；来源列表<strong>越靠上越靠前</strong>，支持拖动调整上下顺序。</figcaption>
+    </div>
+
+    <div class="grid c2">
+      <div class="card key"><div class="ico">🎨</div><h4>场景（Scene）</h4><p>一套<strong>固定画面组合</strong>。比如你可以建三个场景："游戏直播"（游戏+摄像头）、"开场待机"（图片+倒计时）、"结束画面"（文字感谢）。直播时点一下场景即可<strong>瞬间切换</strong>整组画面。</p></div>
+      <div class="card key"><div class="ico">🧩</div><h4>来源（Source）</h4><p>放进场景里的<strong>单个素材</strong>：屏幕、游戏、摄像头、图片、文字、浏览器页面、音频等。一个来源可以同时被多个场景引用，也可以被嵌套成"场景来源"。</p></div>
+    </div>
+
+    <h3>常用来源一览</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>来源类型</th><th>用途</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>显示器采集</strong></td><td>录整个屏幕 / 演示桌面</td><td>Windows/Linux 可用；多显示器时选对应屏幕</td></tr>
+          <tr><td><strong>窗口采集</strong></td><td>只录某一个软件窗口</td><td>适合只演示某个程序，避免露隐私</td></tr>
+          <tr><td><strong>游戏采集</strong></td><td>捕获全屏 3D 游戏</td><td>仅 Windows，性能最好，游戏黑屏时用它</td></tr>
+          <tr><td><strong>视频采集设备</strong></td><td>摄像头 / 采集卡画面</td><td>接单反、Switch、手机等要配采集卡</td></tr>
+          <tr><td><strong>音频输入/输出采集</strong></td><td>单独采集某路声音</td><td>桌面音频与麦克风通常已默认接入混音器</td></tr>
+          <tr><td><strong>图像 / 媒体源</strong></td><td>放图片、Logo、本地视频</td><td>媒体源可循环播放，用于"无人直播/片头"</td></tr>
+          <tr><td><strong>文本（GDI+）</strong></td><td>加标题、字幕、水印</td><td>常用来打直播间标题或"下播提示"</td></tr>
+          <tr><td><strong>浏览器</strong></td><td>加载网页、弹幕、动画</td><td>配合弹幕插件、互动组件、倒计时页</td></tr>
+          <tr><td><strong>场景（来源嵌套）</strong></td><td>把一个场景作为素材</td><td>高级用法，用于复用整套组合</td></tr>
+          <tr><td><strong>色度键滤镜</strong></td><td>绿幕抠像</td><td>加在摄像头来源上（见场景 5）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section id="s5">
+    <h2><span class="num">5</span>3 分钟快速上手（自动配置向导）</h2>
+    <p class="lead">跟着向导走一遍，OBS 会自动帮你调好最适合这台电脑的参数。</p>
+
+    <ol class="steps">
+      <li><b>打开自动配置向导</b><span class="d">首次启动会自动弹出；若错过了，点菜单「工具 → 自动配置向导」。</span></li>
+      <li><b>选择用途</b><span class="d">「优化用于直播，我是主播」或「仅用于录制，我不直播」——按你的主要用途二选一（以后可改）。</span></li>
+      <li><b>视频设置</b><span class="d">保持默认的"基础分辨率"（通常 1920×1080），帧率可选 30 或 60。担心电脑性能就选 30。</span></li>
+      <li><b>直播设置（如选了直播）</b><span class="d">选择你的平台（如 Bilibili、抖音、YouTube），或选"自定义"填入服务器与推流密钥（见第 8 章）。向导会测网速并给出推荐码率。</span></li>
+      <li><b>应用设置</b><span class="d">点「应用设置」完成。现在添加一个来源（如"显示器采集"），点右下角「开始录制」试录 30 秒，回放确认正常即可。</span></li>
+    </ol>
+
+    <div class="callout tip"><span class="sym">✅</span><div><strong>最快上手口诀：</strong>① 跑自动配置向导 → ② 来源点 <code>+</code> 添加"显示器采集" → ③ 混音器拉大"桌面音频/麦克风"音量 → ④ 点「开始录制」。四步即可录下第一段屏幕视频。</div></div>
+  </section>
+
+  <!-- ============ 6 ============ -->
+  <section id="s6">
+    <h2><span class="num">6</span>基础设置详解</h2>
+    <p class="lead">点「文件 → 设置」进入。新手建议先用"简单模式"，理解后再切"高级模式"。</p>
+
+    <h3>6.1 视频：决定画面清晰度</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>选项</th><th>含义</th><th>建议值</th></tr></thead>
+        <tbody>
+          <tr><td>基础（画布）分辨率</td><td>画布大小，来源放在这个"纸面"上</td><td>1920×1080</td></tr>
+          <tr><td>输出（缩放）分辨率</td><td>最终录像/直播的分辨率</td><td>1080p（性能不足可降 1280×720）</td></tr>
+          <tr><td>常用帧率（FPS）</td><td>每秒画面张数</td><td>教程录屏 30；游戏直播 60</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6.2 输出：决定画质与文件大小 / 流畅度</h3>
+    <p>「输出」是 OBS 最关键的设置页。<strong>简单模式</strong>下只需填几个数字；<strong>高级模式</strong>可分别细调"直播"和"录制"。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>项目</th><th>直播（推流）推荐</th><th>本地录制推荐</th></tr></thead>
+        <tbody>
+          <tr><td>编码器</td><td>优先硬件编码：<code>NVIDIA NVENC H.264</code> / AMD / Intel QSV；无独显用 <code>x264</code></td><td>同左，硬件编码更省 CPU</td></tr>
+          <tr><td>码率控制</td><td><code>CBR</code>（恒定码率，直播必须）</td><td>可用 <code>CQP/CRF</code>（按质量，文件更小）</td></tr>
+          <tr><td>视频码率</td><td>1080p60 约 6000~9000 Kbps；1080p30 约 4500~6000</td><td>CQP 18~22（越小越清晰、文件越大）</td></tr>
+          <tr><td>封装格式</td><td>—（直播无文件）</td><td>32.x 默认 Hybrid MP4/MOV，兼容好又抗崩溃</td></tr>
+          <tr><td>录像路径</td><td>—</td><td>自定，如 <code>D:\OBS录像</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout info"><span class="sym">📌</span><div><strong>码率怎么定？</strong>码率越高越清晰，但需要更大的上传带宽（直播）或更大的文件（录制）。经验值：<strong>720p≈3000–5000、1080p30≈4500–6000、1080p60≈6000–9000 Kbps</strong>。直播码率不要超过你实际上行带宽的约 70%。</div></div>
+
+    <h3>6.3 音频：桌面声音 + 麦克风</h3>
+    <div class="figure">
+      <svg viewBox="0 0 860 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="音频路由">
+        <rect x="20" y="30" width="180" height="80" rx="12" fill="#fff" stroke="#e5e7eb"/>
+        <text x="110" y="64" font-size="26" text-anchor="middle">🔊</text>
+        <text x="110" y="94" font-size="13" font-weight="700" text-anchor="middle" fill="#111827">桌面音频（电脑声音）</text>
+        <rect x="20" y="130" width="180" height="80" rx="12" fill="#fff" stroke="#e5e7eb"/>
+        <text x="110" y="164" font-size="26" text-anchor="middle">🎤</text>
+        <text x="110" y="194" font-size="13" font-weight="700" text-anchor="middle" fill="#111827">麦克风（你的声音）</text>
+
+        <rect x="280" y="60" width="280" height="110" rx="14" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+        <text x="420" y="92" font-size="16" font-weight="800" text-anchor="middle" fill="#5b21b6">混音器</text>
+        <text x="420" y="118" font-size="12" text-anchor="middle" fill="#6b7280">分别调节音量 / 静音</text>
+        <text x="420" y="140" font-size="12" text-anchor="middle" fill="#6b7280">可加降噪、增益等滤镜</text>
+
+        <rect x="640" y="60" width="200" height="110" rx="14" fill="#0f0d1a"/>
+        <text x="740" y="92" font-size="16" font-weight="800" text-anchor="middle" fill="#c4b5fd">输出</text>
+        <text x="740" y="118" font-size="12" text-anchor="middle" fill="#9ca3af">→ 直播流 / 录像文件</text>
+        <text x="740" y="140" font-size="12" text-anchor="middle" fill="#9ca3af">（两路声音已自动混合）</text>
+
+        <line x1="200" y1="70" x2="278" y2="90" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr3)"/>
+        <line x1="200" y1="170" x2="278" y2="140" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr3)"/>
+        <line x1="562" y1="115" x2="638" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr3)"/>
+        <defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+      </svg>
+      <figcaption><b>图 6-1</b>　音频默认就有两路：桌面音频 + 麦克风，在混音器里调节，最终一起输出。</figcaption>
+    </div>
+    <p>在「设置 → 音频」里可指定具体设备（哪个麦克风、哪个扬声器）。若直播没声音，90% 是这里选错了设备或混音器里静音了。</p>
+  </section>
+
+  <!-- ============ 7 ============ -->
+  <section id="s7">
+    <h2><span class="num">7</span>录制视频教程（录屏 / 录课）</h2>
+    <p class="lead">最常用的功能之一，学会它就能做教程、录课、存档会议。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="录制流程">
+        <rect x="20" y="60" width="230" height="90" rx="14" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+        <text x="135" y="94" font-size="15" font-weight="800" text-anchor="middle" fill="#5b21b6">OBS 采集画面+声音</text>
+        <text x="135" y="120" font-size="12" text-anchor="middle" fill="#6b7280">屏幕 / 摄像头 / 麦克风</text>
+        <rect x="330" y="60" width="200" height="90" rx="14" fill="#fff" stroke="#e5e7eb"/>
+        <text x="430" y="94" font-size="15" font-weight="700" text-anchor="middle" fill="#111827">编码压缩</text>
+        <text x="430" y="120" font-size="12" text-anchor="middle" fill="#6b7280">NVENC / x264</text>
+        <rect x="610" y="60" width="230" height="90" rx="14" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+        <text x="725" y="90" font-size="15" font-weight="800" text-anchor="middle" fill="#166534">本地视频文件</text>
+        <text x="725" y="116" font-size="12" text-anchor="middle" fill="#166534">MP4 / MKV / MOV</text>
+        <text x="725" y="136" font-size="12" text-anchor="middle" fill="#166534">保存在"录像路径"</text>
+        <line x1="250" y1="105" x2="328" y2="105" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr4)"/>
+        <line x1="532" y1="105" x2="608" y2="105" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr4)"/>
+        <defs><marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+      </svg>
+      <figcaption><b>图 7-1</b>　录制流程：采集 → 编码 → 落盘为视频文件，不经过网络。</figcaption>
+    </div>
+
+    <ol class="steps">
+      <li><b>新建场景</b><span class="d">「场景」面板点 <code>+</code>，命名如"录课"。</span></li>
+      <li><b>添加画面来源</b><span class="d">「来源」点 <code>+</code>：录整个屏幕选"显示器采集"；只录某个软件选"窗口采集"。拖动四角可缩放、移动位置。</span></li>
+      <li><b>（可选）加摄像头画中画</b><span class="d">再点 <code>+</code> 添加"视频采集设备"，选中摄像头，缩小后拖到角落，实现"人像+屏幕"同框。</span></li>
+      <li><b>确认声音</b><span class="d">看混音器：播放点声音，"桌面音频"的绿色音量条应跳动；说话时"麦克风"应跳动。没反应就回「设置 → 音频」换设备。</span></li>
+      <li><b>开始录制</b><span class="d">点「开始录制」，此时右上角会显示录制时长；录制中可随时点「停止录制」结束。</span></li>
+      <li><b>找到文件</b><span class="d">「文件 → 显示录像」即可打开保存文件夹（默认在用户"视频"目录）。</span></li>
+    </ol>
+    <div class="callout warn"><span class="sym">💾</span><div><strong>重要：</strong>建议在「设置 → 输出」里勾选"录像完成后自动重封装为 MP4"或直接用 Hybrid MP4/MOV 默认格式，避免断电/崩溃导致文件损坏打不开。</div></div>
+  </section>
+
+  <!-- ============ 8 ============ -->
+  <section id="s8">
+    <h2><span class="num">8</span>直播推流教程（B站 / 抖音 / 视频号 / YouTube）</h2>
+    <p class="lead">直播的本质：把 OBS 的画面实时"推"到平台服务器，平台再分发给观众。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 860 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="直播推流流程">
+        <rect x="20" y="70" width="190" height="90" rx="14" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+        <text x="115" y="102" font-size="14" font-weight="800" text-anchor="middle" fill="#5b21b6">① OBS（你的电脑）</text>
+        <text x="115" y="126" font-size="12" text-anchor="middle" fill="#6b7280">采集 + 编码</text>
+        <rect x="270" y="70" width="150" height="90" rx="14" fill="#fff" stroke="#e5e7eb"/>
+        <text x="345" y="102" font-size="14" font-weight="700" text-anchor="middle" fill="#111827">② RTMP 推流</text>
+        <text x="345" y="126" font-size="12" text-anchor="middle" fill="#6b7280">服务器地址+密钥</text>
+        <rect x="480" y="70" width="170" height="90" rx="14" fill="#fff" stroke="#e5e7eb"/>
+        <text x="565" y="102" font-size="14" font-weight="700" text-anchor="middle" fill="#111827">③ 平台服务器</text>
+        <text x="565" y="126" font-size="12" text-anchor="middle" fill="#6b7280">B站/抖音/视频号</text>
+        <rect x="710" y="70" width="130" height="90" rx="14" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+        <text x="775" y="102" font-size="14" font-weight="800" text-anchor="middle" fill="#166534">④ 观众观看</text>
+        <text x="775" y="126" font-size="12" text-anchor="middle" fill="#166534">手机/电脑</text>
+        <line x1="210" y1="115" x2="268" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr5)"/>
+        <line x1="420" y1="115" x2="478" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr5)"/>
+        <line x1="650" y1="115" x2="708" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr5)"/>
+        <text x="430" y="52" font-size="12" fill="#6b7280" text-anchor="middle">需要上传带宽 ≈ 码率 × 1.3 以上</text>
+        <defs><marker id="arr5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+      </svg>
+      <figcaption><b>图 8-1</b>　直播推流流程：你只需从平台拿到"服务器地址 + 推流密钥"，填入 OBS 即可。</figcaption>
+    </div>
+
+    <h3>关键一步：获取"推流地址 + 推流密钥"</h3>
+    <p>不同平台位置不同，但逻辑一致——都在各平台的<strong>"开播设置 / 直播中心 / 推流地址"</strong>里：</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>平台</th><th>获取位置（以各平台实际界面为准）</th></tr></thead>
+        <tbody>
+          <tr><td>Bilibili</td><td>创作中心 / 直播中心 →「我的直播间」→「开播设置」，复制"服务器地址"和"串流密钥"</td></tr>
+          <tr><td>抖音</td><td>抖音直播伴侣之外，可用"推流码"方式（在网页直播后台获取 RTMP 地址与密钥）</td></tr>
+          <tr><td>视频号</td><td>视频号助手 →「直播」→「推流」，生成推流地址与密钥</td></tr>
+          <tr><td>YouTube</td><td>YouTube 直播 →「直播设置」，获取"流地址"和"流密钥"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn"><span class="sym">🔐</span><div><strong>密钥=直播密码，切勿截图外泄！</strong>泄露后别人可推流到你的直播间。此外，很多平台的密钥会<strong>定期变化</strong>，重新开播前记得刷新复制。</div></div>
+
+    <ol class="steps">
+      <li><b>进入推流设置</b><span class="d">「文件 → 设置 → 推流」。服务选择你的平台（内置了 B站、YouTube、Twitch 等预设）；若没有，选"自定义"。</span></li>
+      <li><b>填入服务器与密钥</b><span class="d">把平台的"服务器地址"粘贴到「服务器」，把"推流密钥"粘贴到「推流码」。点「确定」。</span></li>
+      <li><b>检查画面与声音</b><span class="d">确认预览画面正常、混音器音量条在动。</span></li>
+      <li><b>开始直播</b><span class="d">点「开始直播」，回到平台后台看是否显示"直播中"。首次建议先用小号或试播测试。</span></li>
+      <li><b>监控状态</b><span class="d">盯住右下角「丢帧」：一直 0 最理想；若持续飙高，说明网速/码率不匹配，需降码率（见第 11 章）。</span></li>
+    </ol>
+  </section>
+
+  <!-- ============ 9 ============ -->
+  <section id="s9">
+    <h2><span class="num">9</span>八大使用场景实战</h2>
+    <p class="lead">这是本教程的精华。每个场景给出"要什么来源 + 怎么搭 + 注意什么"，照着做即可。</p>
+
+    <!-- 场景1 -->
+    <div class="scene">
+      <div class="head"><div class="n">1</div><div><h3>游戏直播</h3><div class="use">适合：B站/抖音/YouTube 游戏主播</div></div></div>
+      <div class="body">
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">游戏采集（或显示器采集）</span><span class="chip">视频采集设备（摄像头）</span><span class="chip">文本（标题/水印）</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">游戏来源优先用<strong>"游戏采集"</strong>（性能最好）。摄像头缩小放角落，加文字做标题或"感谢打赏"。可再建一个"开局等待"场景放封面图。</div></div>
+        <div class="row"><div class="lbl">参数建议</div><div class="val">1080p60、CBR 6000–9000 Kbps、优先 NVENC 硬编；上传带宽不足就降到 1080p30 / 720p60。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">游戏黑屏 → 改用"游戏采集"并选对游戏进程；画面卡 → 关闭 OBS 预览或降码率；注意部分反作弊游戏需"窗口/显示器采集"。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景2 -->
+    <div class="scene">
+      <div class="head"><div class="n">2</div><div><h3>录屏教学 / 软件演示</h3><div class="use">适合：教程 UP 主、程序员、产品演示</div></div></div>
+      <div class="body">
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">显示器采集</span><span class="chip">麦克风（讲解）</span><span class="chip">（可选）鼠标高亮/点击效果插件</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">录整个屏幕用"显示器采集"；只想录某个软件用"窗口采集"防隐私泄露。确认麦克风音量正常，桌面音频（系统提示音）按需开关。</div></div>
+        <div class="row"><div class="lbl">参数建议</div><div class="val">1080p30 足够，本地录制用 CQP 18–20（画质高、文件适中）；编码器选硬件编码。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">麦克风底噪 → 给麦克风加"降噪"滤镜；没声音 → 检查混音器与默认设备；文件过大 → 提高 CQP 数值（如 20→23）。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景3 -->
+    <div class="scene">
+      <div class="head"><div class="n">3</div><div><h3>网课 / 会议（屏幕+人像画中画）</h3><div class="use">适合：老师上网课、远程汇报</div></div></div>
+      <div class="body">
+        <div class="figure">
+          <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="画中画布局">
+            <rect x="20" y="20" width="420" height="180" rx="10" fill="#e5e7eb" stroke="#9ca3af"/>
+            <text x="230" y="60" font-size="14" fill="#4b5563" text-anchor="middle">PPT / 课件 / 屏幕内容（铺满背景）</text>
+            <rect x="60" y="80" width="300" height="80" rx="6" fill="#fff" stroke="#cbd5e1"/>
+            <text x="210" y="118" font-size="12" fill="#94a3b8" text-anchor="middle">演示内容区域</text>
+            <rect x="360" y="140" width="72" height="52" rx="6" fill="#4c1d95"/>
+            <text x="396" y="168" font-size="10" fill="#fff" text-anchor="middle">人像</text>
+            <text x="396" y="202" font-size="9" fill="#6b7280" text-anchor="middle">画中画</text>
+            <rect x="470" y="20" width="230" height="180" rx="10" fill="#fff" stroke="#e5e7eb"/>
+            <text x="585" y="50" font-size="13" font-weight="700" text-anchor="middle" fill="#4c1d95">布局说明</text>
+            <text x="500" y="82" font-size="12" fill="#374151">① 屏幕铺满画布</text>
+            <text x="500" y="108" font-size="12" fill="#374151">② 摄像头缩小拖到角落</text>
+            <text x="500" y="134" font-size="12" fill="#374151">③ 拖动边框可调大小位置</text>
+            <text x="500" y="160" font-size="12" fill="#374151">④ 右键来源可加圆角/滤镜</text>
+          </svg>
+          <figcaption><b>图 9-1</b>　画中画布局：屏幕铺满，人像放角落，右上角"锁定预览"可防误拖。</figcaption>
+        </div>
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">显示器采集（课件）</span><span class="chip">视频采集设备（人像）</span><span class="chip">麦克风</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">先加屏幕铺满，再加摄像头，缩小拖到角落形成画中画。开启"虚拟摄像头"后，在腾讯会议/Zoom/钉钉里选择"OBS Virtual Camera"即可把合成画面当摄像头用（见场景 4）。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">会议软件里若选不到 OBS → 点 OBS 右下角「启动虚拟摄像头」；画面颠倒/黑屏 → 检查来源顺序（上层会盖住下层）。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景4 -->
+    <div class="scene">
+      <div class="head"><div class="n">4</div><div><h3>虚拟摄像头（美颜 / 背景替换）</h3><div class="use">适合：视频会议、面试、社交软件</div></div></div>
+      <div class="body">
+        <div class="figure">
+          <svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="虚拟摄像头流程">
+            <rect x="20" y="70" width="210" height="90" rx="14" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+            <text x="125" y="102" font-size="14" font-weight="800" text-anchor="middle" fill="#5b21b6">OBS 合成画面</text>
+            <text x="125" y="126" font-size="12" text-anchor="middle" fill="#6b7280">摄像头+背景+滤镜+文字</text>
+            <rect x="310" y="70" width="190" height="90" rx="14" fill="#fff" stroke="#e5e7eb"/>
+            <text x="405" y="102" font-size="14" font-weight="700" text-anchor="middle" fill="#111827">虚拟摄像头</text>
+            <text x="405" y="126" font-size="12" text-anchor="middle" fill="#6b7280">OBS Virtual Camera</text>
+            <rect x="580" y="70" width="260" height="90" rx="14" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+            <text x="710" y="98" font-size="14" font-weight="800" text-anchor="middle" fill="#166534">任意软件选它当"摄像头"</text>
+            <text x="710" y="124" font-size="12" text-anchor="middle" fill="#166534">腾讯会议 / Zoom / 微信 / 钉钉</text>
+            <line x1="230" y1="115" x2="308" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr6)"/>
+            <line x1="500" y1="115" x2="578" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr6)"/>
+            <defs><marker id="arr6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+          </svg>
+          <figcaption><b>图 9-2</b>　虚拟摄像头：把 OBS 的合成画面"伪装"成一个摄像头设备，供所有视频软件调用。</figcaption>
+        </div>
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">视频采集设备（真实摄像头）</span><span class="chip">图像（虚拟背景）</span><span class="chip">文本（名牌）</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">底层放背景图，上层放摄像头并调好位置；可给摄像头加"色度键"做绿幕、或用第三方虚拟背景滤镜。点「启动虚拟摄像头」，会议软件里选"OBS Virtual Camera"。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">其他软件占用摄像头时会冲突 → 先在 OBS 里关闭摄像头来源或独占；虚拟摄像头分辨率在「设置 → 视频」统一控制。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景5 -->
+    <div class="scene">
+      <div class="head"><div class="n">5</div><div><h3>绿幕抠像（虚拟背景）</h3><div class="use">适合：直播换背景、网课出镜、特效画面</div></div></div>
+      <div class="body">
+        <div class="figure">
+          <svg viewBox="0 0 860 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="绿幕抠像">
+            <rect x="20" y="60" width="180" height="110" rx="12" fill="#16a34a"/>
+            <text x="60" y="110" font-size="13" fill="#fff" font-weight="700">绿幕背景</text>
+            <circle cx="130" cy="95" r="20" fill="#fcd34d"/>
+            <text x="130" y="100" font-size="11" text-anchor="middle" fill="#111827">人</text>
+            <rect x="250" y="60" width="180" height="110" rx="12" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+            <text x="340" y="92" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="700">色度键滤镜</text>
+            <text x="340" y="114" font-size="12" fill="#6b7280" text-anchor="middle">抠掉绿色</text>
+            <text x="340" y="134" font-size="12" text-anchor="middle" fill="#6b7280">→ 变成透明</text>
+            <rect x="480" y="60" width="360" height="110" rx="12" fill="#0f0d1a" stroke="#7c3aed" stroke-width="2"/>
+            <text x="660" y="90" font-size="13" fill="#c4b5fd" text-anchor="middle" font-weight="700">合成到任意背景</text>
+            <text x="540" y="116" font-size="12" fill="#9ca3af">游戏画面 / 虚拟场景</text>
+            <text x="540" y="136" font-size="12" fill="#9ca3af">图片 / 视频 / 浏览器背景</text>
+            <text x="540" y="156" font-size="12" fill="#9ca3af">人像已"贴"到新背景上</text>
+            <line x1="200" y1="115" x2="248" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr7)"/>
+            <line x1="432" y1="115" x2="478" y2="115" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr7)"/>
+            <defs><marker id="arr7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a78bfa"/></marker></defs>
+          </svg>
+          <figcaption><b>图 9-3</b>　绿幕抠像原理：色度键把绿色区域变透明，人像就"浮"出来，再叠到任何背景上。</figcaption>
+        </div>
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">图像/视频（背景，放底层）</span><span class="chip">视频采集设备（绿幕前的人，放上层）</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">右键摄像头来源 →「滤镜」→ 添加<strong>"色度键"</strong>→ 颜色选绿色，拖动"相似度/平滑度"直到绿幕干净、人像边缘不破。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">布光要均匀（绿幕不能有褶皱阴影）；别穿绿色衣服；抠不干净就调大"相似度"，边缘毛糙就调"平滑度/溢出抑制"。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景6 -->
+    <div class="scene">
+      <div class="head"><div class="n">6</div><div><h3>多场景切换 / 多机位</h3><div class="use">适合：直播节目、多角度录制、带货</div></div></div>
+      <div class="body">
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">场景A：全景（摄像头1）</span><span class="chip">场景B：特写（摄像头2/采集卡）</span><span class="chip">场景C：屏幕PPT</span><span class="chip">场景D：片头/待机</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">每个场景独立搭建画面。直播中点击不同场景即可<strong>无缝切换</strong>；「转场特效」里选"淡入淡出"更柔和。多摄像头可配多块采集卡接入。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">给常用场景设<strong>快捷键</strong>（见附录）切换更快；开启「工作室模式」可先在后台调好下一场景再切出，避免观众看到调整过程。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景7 -->
+    <div class="scene">
+      <div class="head"><div class="n">7</div><div><h3>纯音频录制（播客 / 有声书）</h3><div class="use">适合：播客、配音、音乐 Demo</div></div></div>
+      <div class="body">
+        <div class="row"><div class="lbl">来源组合</div><div class="val"><div class="chips"><span class="chip">麦克风（音频输入采集）</span><span class="chip">（可选）媒体源背景音乐</span></div></div></div>
+        <div class="row"><div class="lbl">搭建要点</div><div class="val">不用加画面来源，只留麦克风即可。给麦克风加"降噪"+"压缩器"滤镜提升音质。录制后文件也是带画面的（黑屏或封面），可导入剪辑软件导出纯音频。</div></div>
+        <div class="row"><div class="lbl">避坑</div><div class="val">想在录像里保留<strong>多轨</strong>（人声/背景音分开）→ 用「设置 → 输出 → 高级 → 录像 → 音频轨道」配置多轨。</div></div>
+      </div>
+    </div>
+
+    <!-- 场景8 -->
+    <div class="scene">
+      <div class="head"><div class="n">8</div><div><h3>回放缓存（精彩瞬间）</h3><div class="use">适合：游戏高光、突发镜头回录</div></div></div>
+      <div class="body">
+        <div class="row"><div class="lbl">原理</div><div class="val">OBS 在后台<strong>持续缓存最近 N 秒画面</strong>，你按一下快捷键，就把"刚刚那一段"存成文件，无需全程录像。</div></div>
+        <div class="row"><div class="lbl">开启方法</div><div class="val">「设置 → 输出 → 回放缓存」开启，设置时长（如 60 秒）；「设置 → 热键」给"保存回放缓存"设个快捷键（如 F8）。</div></div>
+        <div class="row"><div class="lbl">用法</div><div class="val">打游戏打出精彩操作 → 按 F8 → 最近 60 秒自动保存。特别适合"不想一直录、又怕错过高光"的场景。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>进阶技巧与常用插件</h2>
+    <p class="lead">掌握这些，画面和效率能再上一个台阶。</p>
+
+    <h3>10.1 给来源加滤镜</h3>
+    <p>右键任意来源 →「滤镜」→ 点 <code>+</code> 添加。常用滤镜：</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>滤镜</th><th>作用</th><th>典型场景</th></tr></thead>
+        <tbody>
+          <tr><td><strong>降噪（噪声抑制）</strong></td><td>去除麦克风底噪、电流声</td><td>录课、直播人声更干净</td></tr>
+          <tr><td><strong>噪声门</strong></td><td>低于阈值的声音自动静音</td><td>不说话时消除杂音</td></tr>
+          <tr><td><strong>增益</strong></td><td>放大/降低音量</td><td>麦克风声音太小</td></tr>
+          <tr><td><strong>色度键</strong></td><td>绿幕/蓝幕抠像</td><td>虚拟背景（场景 5）</td></tr>
+          <tr><td><strong>色彩校正 / LUT</strong></td><td>调色、套滤镜风格</td><td>画面偏色、风格化</td></tr>
+          <tr><td><strong>模糊</strong></td><td>打码/模糊局部</td><td>遮挡隐私信息</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>10.2 常用插件推荐</h3>
+    <p>32.0 起 OBS 内置了"插件管理器"（菜单「工具」中），安装插件更方便。热门插件：</p>
+    <div class="grid c2">
+      <div class="card"><h4>📱 obs-websocket</h4><p>手机/网页远程控制 OBS 开始、停止、切场景。直播博主常用。</p></div>
+      <div class="card"><h4>🎨 StreamFX</h4><p>提供模糊背景、3D 变换、更高质量滤镜等进阶效果。</p></div>
+      <div class="card"><h4>💬 弹幕 / 字幕插件</h4><p>把直播弹幕显示到画面；Whisper 类插件可实时自动生成字幕。</p></div>
+      <div class="card"><h4>🎛️ 高级转场 / 倒计时</h4><p>丰富的转场动画、"即将开播"倒计时组件。</p></div>
+    </div>
+    <div class="callout info"><span class="sym">📌</span><div><strong>找插件：</strong>首选 OBS 官网论坛 / GitHub 的知名项目，谨慎安装来路不明的插件。安装后重启 OBS 生效。</div></div>
+
+    <h3>10.3 让画面更专业的几个小技巧</h3>
+    <ul>
+      <li><strong>转场</strong>：「转场特效」选"淡入淡出 300ms"或"剪切"，场景切换不突兀。</li>
+      <li><strong>锁定来源</strong>：预览区点来源 → 右上角"锁"图标，防止误拖动。</li>
+      <li><strong>工作室模式</strong>：右下角「控件」里开启，后台预览 + 前台播出分离，适合正式直播。</li>
+      <li><strong>快捷键</strong>：把"开始录制/停止录制/切场景/保存回放"都设上快捷键，操作快很多。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>常见问题排查</h2>
+    <p class="lead">遇到问题先查这张表，基本能解决 80% 的情况。</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>现象</th><th>常见原因</th><th>解决办法</th></tr></thead>
+        <tbody>
+          <tr><td><strong>画面全黑</strong></td><td>来源没添加/选错显示器；显卡切换（笔记本双显卡）；部分窗口受保护</td><td>重新添加来源并选对显示器；用"窗口采集"换"游戏采集"；关闭 OBS 用"集成显卡"或"高性能"启动</td></tr>
+          <tr><td><strong>没有声音</strong></td><td>默认设备选错、混音器静音、来源没加音频</td><td>「设置→音频」选对设备；混音器看音量条是否跳动、取消静音</td></tr>
+          <tr><td><strong>直播卡顿/丢帧</strong></td><td>码率超过上行带宽、CPU/GPU 满载</td><td>降低码率与分辨率；改用硬件编码；关掉预览；减少来源</td></tr>
+          <tr><td><strong>录像文件打不开/损坏</strong></td><td>用了 MKV 没重封装、断电/崩溃</td><td>用 Hybrid MP4/MOV 默认格式，或"完成后重封装为 MP4"</td></tr>
+          <tr><td><strong>推流失败/连不上</strong></td><td>服务器地址或密钥填错/过期</td><td>重新复制平台推流地址与密钥，确认没有多余空格</td></tr>
+          <tr><td><strong>麦克风底噪大</strong></td><td>环境噪声、增益过高</td><td>给麦克风加"降噪"+"噪声门"滤镜</td></tr>
+          <tr><td><strong>录出来模糊</strong></td><td>码率过低、输出分辨率被缩小</td><td>提高码率；确认输出分辨率为 1080p</td></tr>
+          <tr><td><strong>摄像头被占用</strong></td><td>其他软件占用了摄像头</td><td>关闭占用软件，或在 OBS 里重新添加该设备</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>附录：快捷键与参数速查</h2>
+
+    <h3>12.1 常用快捷键（可自定义）</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>功能</th><th>默认快捷键</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>开始/停止录制</td><td>无默认（建议设 <kbd>F9</kbd>）</td><td>在「设置 → 热键」里自定义</td></tr>
+          <tr><td>开始/停止直播</td><td>无默认（建议设 <kbd>F10</kbd>）</td><td>同上</td></tr>
+          <tr><td>保存回放缓存</td><td>无默认（建议设 <kbd>F8</kbd>）</td><td>需先开启回放缓存</td></tr>
+          <tr><td>切换场景</td><td>可设为 <kbd>1</kbd>–<kbd>9</kbd></td><td>直播中一键切画面</td></tr>
+          <tr><td>静音麦克风</td><td>可自定义</td><td>临时闭麦很实用</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>12.2 参数速查卡</h3>
+    <div class="grid c2">
+      <div class="card tip"><h4>🎬 本地录屏（画质优先）</h4><p>1080p30 · 编码器 NVENC/x264 · CQP 18–20 · Hybrid MP4</p></div>
+      <div class="card key"><h4>📡 直播推流（流畅优先）</h4><p>1080p60 · CBR · 6000–9000 Kbps · NVENC 硬编 · 上传带宽要够</p></div>
+      <div class="card note"><h4>👩‍🏫 网课/会议</h4><p>1080p30 · 画中画布局 · 虚拟摄像头输出 · 麦克风加降噪</p></div>
+      <div class="card key"><h4>🎮 游戏直播</h4><p>游戏采集 · 1080p60 · 摄像头角落 · 快捷键切场景</p></div>
+    </div>
+
+    <h3>12.3 学习资源</h3>
+    <ul>
+      <li>官方下载：<a href="https://obsproject.com/download" target="_blank">obsproject.com/download</a></li>
+      <li>官方帮助文档：<a href="https://obsproject.com/kb" target="_blank">obsproject.com/kb</a></li>
+      <li>官方论坛与社区（插件、疑难问题）：<a href="https://obsproject.com/forum" target="_blank">obsproject.com/forum</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  OBS Studio 新手入门完全教程 · 图文并茂版　|　基于 OBS Studio 32.x 编写　|　免费 · 开源 · 无水印<br>
+  教程内容仅供参考，各直播平台界面与功能可能更新，请以平台实际页面为准。
+</footer>
+
+</body>
+</html>
