@@ -1,6 +1,6 @@
 # 📚 技术书架 Wiki
 
-> 本 Wiki 收录本仓库根目录下的 10 本技术书籍，涵盖 **云原生与运维**、**支付与金融科技**、**财务信息化**、**AI 智能体**、**嵌入式与物联网**、**电池与新能源** 六大主题。每本书都有独立页面，包含内容简介、全书结构、阅读建议与关联书目。
+> 本 Wiki 收录本仓库根目录下的 12 部原创电子书，涵盖 **云原生与运维**、**支付与金融科技**、**财务信息化**、**AI 智能体**、**嵌入式与物联网**、**电池与新能源**、**人文与哲学** 七大主题。每本书都有独立页面，包含内容简介、全书结构、阅读建议与关联书目。
 
 ## 🗂️ 书目总览
 
@@ -14,10 +14,12 @@
 | [生产企业账务信息化建设实践指南](生产企业账务信息化建设实践指南) | 财务信息化 | 266 | 生产企业账务系统从规划、选型到上线的全流程指南 |
 | [WorkBuddy 在财务中的应用](WorkBuddy在财务中的应用) | 财务信息化 | 172 | 财务人用 AI 完成核算、报表、税务的实战手册 |
 | [Deep Agent 框架](Deep-Agent框架) | AI 智能体 | 124 | 基于 LangChain DeepAgents 的智能体设计与企业落地 |
+| [企业 AI Agent 集成与私有化部署实战](企业AI_Agent实战指南) | AI 智能体 | 221 | Java 技术栈 + vLLM，把 Agent 安全可控地接进企业系统 |
 | [ESP32 开发实战：快速入门](ESP32开发实战快速入门) | 嵌入式 / 物联网 | 148 | 五大部分 30 章，从点灯到云端物联网平台的完整实战路径 |
 | [BMS 电池管理系统](BMS电池管理系统) | 电池 / 嵌入式 | 177 | 从电化学原理到量产落地的动力电池与储能 BMS 全栈指南 |
+| [在星空与道德律之间](在星空与道德律之间) | 人文 / 哲学 | 247 | 从孔子、苏格拉底到维特根斯坦，一部有趣的哲学史（附 60 页教学课件） |
 
-合计 **10 本 / 约 2160 页**。
+合计 **12 部 / 约 2628 页**。
 
 ## 🧭 六大主题
 
@@ -36,12 +38,16 @@
 
 ### 🤖 AI 智能体
 - [Deep Agent 框架](Deep-Agent框架) —— 智能体原理、沙盒安全、容器化部署与治理
+- [企业 AI Agent 集成与私有化部署实战](企业AI_Agent实战指南) —— Java 团队的大模型落地：集成、vLLM、RAG、K8s、安全与成本治理
 
 ### 🔌 嵌入式与物联网
 - [ESP32 开发实战：快速入门](ESP32开发实战快速入门) —— 外设、联网、RTOS、ESP-IDF 底层与五个完整项目
 
 ### 🔋 电池与新能源
 - [BMS 电池管理系统](BMS电池管理系统) —— 电池原理、状态估算、功能安全、标准与量产工程
+
+### 🏛️ 人文与哲学
+- [在星空与道德律之间](在星空与道德律之间) —— 从先秦诸子、印度波斯到二十世纪，一部连续剧式的哲学史（附 60 页通识课课件）
 
 ## 🚀 如何开始
 
@@ -51,15 +57,20 @@
 
 ## 📦 如何维护本 Wiki
 
-本 Wiki 部署在 Gitee，仓库地址：`https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks.git`。
+本 Wiki 同步部署在 Gitee 与 GitHub：
+
+- Gitee：`https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks.git`
+- GitHub：`https://github.com/xiongyi92/kexuexiongOpenBooks.git`
 
 ```bash
-# 1. 克隆 wiki 仓库
+# 1. 克隆仓库
 git clone https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks.git
 
 # 2. 修改或新增 .md 文件后提交推送
 cd kexuexiongOpenBooks
-git add . && git commit -m "docs: 更新图书 Wiki" && git push
+git add . && git commit -m "docs: 更新图书 Wiki"
+git push            # Gitee
+git push github     # GitHub（远程名为 github）
 ```
 
 推送后访问 https://gitee.com/xiongyi_xueyu/kexuexiongOpenBooks/wikis 即可看到带侧边栏导航的完整 Wiki。
